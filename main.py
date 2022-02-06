@@ -1,6 +1,13 @@
+"""Source code from:
+https://gist.github.com/TGNYC/40f814389ba35fdf41b41858f7ce6cae
+Adapted by https://github.com/xbecas
+2022-02-06, Lisboa, Portugal
+"""
+
 #Space Invaders - Part 6
 #Add multiple enemies
 #Python 2.7 on Mac
+
 import turtle
 import os
 import math
