@@ -7,6 +7,8 @@ Adapted by https://github.com/xbecas
 import turtle
 import math
 import random
+from enemies import Enemies
+
 
 #Set up the screen
 wn = turtle.Screen()
@@ -37,37 +39,6 @@ player.setposition(0, -250)
 player.setheading(90)
 
 playerspeed = 15
-
-enemyspeed = 2
-
-
-def setup_enemy(enemy):
-	enemy.color("red")
-	enemy.shape("circle")
-	enemy.penup()
-	enemy.speed(0)
-
-
-def spawn_enemy(enemy):
-	x = random.randint(-200, 200)
-	y = random.randint(100, 250)
-	enemy.setposition(x, y)
-
-
-def generate_list_of_enemies(number_of_enemies=5):
-	"""Create list of enemies. Each enemy is a turtle object with given
-	attributes, namely shape, color, speed and position
-	"""	
-	enemies = []
-
-	for i in range(number_of_enemies):
-		enemies.append(turtle.Turtle())
-
-	for enemy in enemies:
-		setup_enemy(enemy)
-		spawn_enemy(enemy)
-
-	return enemies
 
 
 #Create the player's bullet
@@ -130,7 +101,8 @@ turtle.onkey(move_left, "Left")
 turtle.onkey(move_right, "Right")
 turtle.onkey(fire_bullet, "space")
 
-enemies = generate_list_of_enemies()
+
+enemies = Enemies.generate_list_of_enemies()
 
 # Main game loop
 while True:
@@ -138,20 +110,20 @@ while True:
 	for enemy in enemies:
 		#Move the enemy
 		x = enemy.xcor()
-		x += enemyspeed
+		x += enemy.dx
 		enemy.setx(x)
 
 		#Move the enemy back and down
 		if enemy.xcor() > 280:
 			y = enemy.ycor()
 			y -= 40
-			enemyspeed *= -1
+			enemy.dx *= -1
 			enemy.sety(y)
 
 		if enemy.xcor() < -280:
 			y = enemy.ycor()
 			y -= 40
-			enemyspeed *= -1
+			enemy.dx *= -1
 			enemy.sety(y)
 			
 		# Check for a collision between the bullet and the enemy
@@ -162,7 +134,7 @@ while True:
 			bullet.setposition(0, -400)
 			
    			# Reset the enemy
-			spawn_enemy(enemy)
+			enemy.spawn()
 		
 		if isCollision(player, enemy):
 			player.hideturtle()
