@@ -1,15 +1,10 @@
-"""Source code from:
-https://gist.github.com/TGNYC/40f814389ba35fdf41b41858f7ce6cae
+"""Space Invaders game - made with Python Turtle
+Source code: https://gist.github.com/TGNYC/40f814389ba35fdf41b41858f7ce6cae
 Adapted by https://github.com/xbecas
 2022-02-06, Lisboa, Portugal
 """
 
-#Space Invaders - Part 6
-#Add multiple enemies
-#Python 2.7 on Mac
-
 import turtle
-import os
 import math
 import random
 
@@ -23,6 +18,7 @@ border_pen = turtle.Turtle()
 border_pen.speed(0)
 border_pen.color("white")
 border_pen.penup()
+
 border_pen.setposition(-300,-300)
 border_pen.pendown()
 border_pen.pensize(3)
@@ -42,26 +38,36 @@ player.setheading(90)
 
 playerspeed = 15
 
-#Choose a number of enemies
-number_of_enemies = 5
-#Create an empty list of enemies
-enemies = []
+enemyspeed = 2
 
-#Add enemies to the list
-for i in range(number_of_enemies):
-	#Create the enemy
-	enemies.append(turtle.Turtle())
 
-for enemy in enemies:
+def setup_enemy(enemy):
 	enemy.color("red")
 	enemy.shape("circle")
 	enemy.penup()
 	enemy.speed(0)
+
+
+def spawn_enemy(enemy):
 	x = random.randint(-200, 200)
 	y = random.randint(100, 250)
 	enemy.setposition(x, y)
 
-enemyspeed = 2
+
+def generate_list_of_enemies(number_of_enemies=5):
+	"""Create list of enemies. Each enemy is a turtle object with given
+	attributes, namely shape, color, speed and position
+	"""	
+	enemies = []
+
+	for i in range(number_of_enemies):
+		enemies.append(turtle.Turtle())
+
+	for enemy in enemies:
+		setup_enemy(enemy)
+		spawn_enemy(enemy)
+
+	return enemies
 
 
 #Create the player's bullet
@@ -90,6 +96,7 @@ def move_left():
 		x = - 280
 	player.setx(x)
 	
+
 def move_right():
 	x = player.xcor()
 	x += playerspeed
@@ -97,12 +104,13 @@ def move_right():
 		x = 280
 	player.setx(x)
 	
+
 def fire_bullet():
-	#Declare bulletstate as a global if it needs changed
+	# Declare bulletstate as a global if it needs changed
 	global bulletstate
 	if bulletstate == "ready":
 		bulletstate = "fire"
-		#Move the bullet to the just above the player
+		# Move the bullet to the just above the player
 		x = player.xcor()
 		y = player.ycor() + 10
 		bullet.setposition(x, y)
@@ -114,13 +122,17 @@ def isCollision(t1, t2):
 		return True
 	else:
 		return False
-#Create keyboard bindings
+
+
+# Create keyboard bindings
 turtle.listen()
 turtle.onkey(move_left, "Left")
 turtle.onkey(move_right, "Right")
 turtle.onkey(fire_bullet, "space")
 
-#Main game loop
+enemies = generate_list_of_enemies()
+
+# Main game loop
 while True:
 	
 	for enemy in enemies:
@@ -142,24 +154,22 @@ while True:
 			enemyspeed *= -1
 			enemy.sety(y)
 			
-		#Check for a collision between the bullet and the enemy
+		# Check for a collision between the bullet and the enemy
 		if isCollision(bullet, enemy):
-			#Reset the bullet
+			# Reset the bullet
 			bullet.hideturtle()
 			bulletstate = "ready"
 			bullet.setposition(0, -400)
-			#Reset the enemy
-			x = random.randint(-200, 200)
-			y = random.randint(100, 250)
-			enemy.setposition(x, y)
+			
+   			# Reset the enemy
+			spawn_enemy(enemy)
 		
 		if isCollision(player, enemy):
 			player.hideturtle()
 			enemy.hideturtle()
 			print ("Game Over")
 			break
-
-		
+	
 	#Move the bullet
 	if bulletstate == "fire":
 		y = bullet.ycor()
