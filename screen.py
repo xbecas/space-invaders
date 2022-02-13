@@ -59,6 +59,14 @@ class GameWindow(turtle._Screen):
     def set_title(self, title):
         """Set window title"""
         self.title = title
+        
+    def game_over(self):
+        ender = turtle.Turtle()
+        ender.hideturtle()
+        ender.setposition(0, 0)
+        ender.pencolor('white')
+        ender.write('Game over', font=('arial',50,'bold'), align='center')
+ 
 
 
 def draw_border(size, pen_color='white', pen_width=3):
@@ -82,3 +90,11 @@ def draw_border(size, pen_color='white', pen_width=3):
     border_pen.setposition( canvas_width/2, canvas_height/2)
     border_pen.setposition(-canvas_width/2, canvas_height/2)
     border_pen.setposition(-canvas_width/2,-canvas_height/2)
+
+
+if __name__ == '__main__':
+    SIZE = CANVAS_WIDTH, CANVAS_HEIGHT = (600, 600)
+    wn = GameWindow(title='Space Invaders', bgcolor='black', size=SIZE)
+    draw_border(SIZE)
+    wn.game_over()
+    turtle.mainloop()

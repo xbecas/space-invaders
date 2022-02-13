@@ -9,7 +9,7 @@ class Enemy(turtle.Turtle):
     
     def __init__(self):
         super().__init__()
-        self.dx = 2
+        self.dx = -5  # 2
         self.setup()
         self.spawn()
 
@@ -23,18 +23,22 @@ class Enemy(turtle.Turtle):
 
 
     def spawn(self):
-        """Set enemy initial position"""
+        """Set enemy's initial position"""
         x = random.randint(-200, 200)
         y = random.randint(100, 250)
         self.setposition(x, y)
     
     
     def update_position(self):
+        """Move enemies"""
         new_x = self.xcor() + self.dx
         self.setx(new_x)
-
+          
+        if not (-280 < new_x < 280):
+            self.move_down()
 
     def move_down(self):
+        """Move the enemy back and down"""
         new_y = self.ycor() - 40
         self.sety(new_y)
         self.dx *= -1

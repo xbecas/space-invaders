@@ -36,13 +36,17 @@ class Bullet(turtle.Turtle):
     
     
     def update_position(self):
-        new_y = self.ycor() + self.dy
-        self.sety(new_y)
-        
+        if self.state == "fire":
+            new_y = self.ycor() + self.dy
+            self.sety(new_y)
+            
+        # Check to see if the bullet has gone to the top
+        if self.ycor() > 275:
+            self.reset()
+
 
     def reset(self):
         # Reset the bullet
         self.hideturtle()
         self.state = "ready"
         # self.setposition(0, -400)
-

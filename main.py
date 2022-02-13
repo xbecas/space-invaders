@@ -5,92 +5,75 @@ Adapted by https://github.com/xbecas
 """
 
 import turtle
-import math
-import random
+import sys
 
+from player import Player
 from enemies import Enemies
 from bullet import Bullet
 from collisions import is_collision
 from screen import GameWindow
 
+
 # Set up the screen
 SIZE = CANVAS_WIDTH, CANVAS_HEIGHT = (600, 600)
 wn = GameWindow(title='Space Invaders', bgcolor='black', size=SIZE)
+# turtle.tracer(0)
 
-# Create the player turtle
-player = turtle.Turtle()
-player.color("blue")
-player.shape("triangle")
-player.penup()
-player.speed(0)
-player.setheading(90)
-player.setposition(0, -250)
-
-playerspeed = 15
-
-
-# Move the player left and right
-def move_left():
-	x = player.xcor()
-	x -= playerspeed
-	if x < -280:
-		x = - 280
-	player.setx(x)
-	
-
-def move_right():
-	x = player.xcor()
-	x += playerspeed
-	if x > 280:
-		x = 280
-	player.setx(x)
-	
-
-enemies = Enemies.generate_list_of_enemies()
+player = Player()
 bullet = Bullet()
+enemies = Enemies.generate_list_of_enemies()
 
+
+# Player's moves
+def player_move_left():
+    player.move_left()
+
+def player_move_right():
+    player.move_right()
 
 def player_fire():
-	bullet.fire(player.pos())
+     bullet.fire(player.pos())
+
+def game_over():
+    wn.game_over()
+    sys.exit('Game over')
+
+def game_over():
+    # [t.hideturtle() for t in wn.turtles()]
+    print('Exit using "q" key')
+    wn.game_over()
+    return False
 
 
 # Create keyboard bindings
 turtle.listen()
-turtle.onkey(move_left, "Left")
-turtle.onkey(move_right, "Right")
+turtle.onkey(player_move_left, "Left")
+turtle.onkey(player_move_right, "Right")
 turtle.onkey(player_fire, "space")
+turtle.onkey(game_over, "q")
 
 
 # Main game loop
-while True:
-	
-	for enemy in enemies:
-		# Move the enemy
-		enemy.update_position()
-  
-		# Move the enemy back and down
-		if enemy.xcor() > 280 or enemy.xcor() < -280:
-			enemy.move_down()
+keep_playing = True
+while keep_playing:
+    
+    # Move the bullet
+    bullet.update_position()
 
-		# Check for a collision between the bullet and the enemy
-		if is_collision(bullet, enemy):
-			bullet.reset()		
-			enemy.spawn()
-		
-		if is_collision(player, enemy):
-			player.hideturtle()
-			enemy.hideturtle()
-			print ("Game Over")
-			break
-	
-	# Move the bullet
-	if bullet.state == "fire":
-		bullet.update_position()
-	
-	# Check to see if the bullet has gone to the top
-	if bullet.ycor() > 275:
-		bullet.reset()
+    # Move the enemies
+    for enemy in enemies:
+        enemy.update_position()
 
+        # Check for a collision between the bullet and the enemy
+        if is_collision(bullet, enemy):
+            bullet.reset()        
+            enemy.spawn()
+        
+        if enemy.ycor() < -210:
+            keep_playing = game_over()
+            break
+    
+#    turtle.update()
 
 # Temporary Exit Statement
 wn.exitonclick()
