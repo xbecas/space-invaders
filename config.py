@@ -1,0 +1,27 @@
+"""Space Invaders game - made with Python Turtle
+Game logic and level variables"""
+
+
+class GameConfig:
+    TITLE = 'Space Invaders'
+    BACKGROUND_COLOR = 'black'
+    
+    CANVAS_WIDTH = 600
+    CANVAS_HEIGHT =  600
+    CANVAS_MARGIN = 25
+    
+    CANVAS_LIMIT_LEFT = -CANVAS_WIDTH//2 + CANVAS_MARGIN//2
+    CANVAS_LIMIT_RIGHT = CANVAS_WIDTH//2 - CANVAS_MARGIN//2
+    
+    PLAYER_INITIAL_POSITION = 0, -CANVAS_HEIGHT//2 + 2*CANVAS_MARGIN
+    PLAYER_INITIAL_DX = 25
+    
+    ENEMIES_INITIAL_NUMBER = 5
+    
+    ENEMY_SPAWN_MAX_Y = CANVAS_HEIGHT // 2 - CANVAS_MARGIN - 400
+    ENEMY_SPAWN_MIN_Y = CANVAS_HEIGHT // 3 - CANVAS_MARGIN - 400
+    
+    ENEMY_DX = CANVAS_WIDTH // 100
+    ENEMY_DY = CANVAS_HEIGHT // 15
+    
+    ENEMY_Y_GOAL = PLAYER_INITIAL_POSITION[1] # Only y-coordinate

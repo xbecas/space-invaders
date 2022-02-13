@@ -5,44 +5,52 @@ Adapted by https://github.com/xbecas
 """
 
 import turtle
-import sys
 
 from player import Player
 from enemies import Enemies
 from bullet import Bullet
 from collisions import is_collision
 from screen import GameWindow
+from game import Game
+from config import GameConfig
 
+
+config = GameConfig()
 
 # Set up the screen
-SIZE = CANVAS_WIDTH, CANVAS_HEIGHT = (600, 600)
-wn = GameWindow(title='Space Invaders', bgcolor='black', size=SIZE)
-# turtle.tracer(0)
+wn = GameWindow(
+    title=config.TITLE,
+    bgcolor=config.BACKGROUND_COLOR,
+    size=(config.CANVAS_WIDTH, config.CANVAS_HEIGHT)
+    )
 
+game = Game()
 player = Player()
 bullet = Bullet()
-enemies = Enemies.generate_list_of_enemies()
+enemies = Enemies.generate_list_of_enemies(game.number_of_enemies)
 
 
-# Player's moves
 def player_move_left():
+    """Move player's ship to the left"""
     player.move_left()
 
+
 def player_move_right():
+    """Move player's ship to the right"""
     player.move_right()
 
+
 def player_fire():
-     bullet.fire(player.pos())
+    """Fire bullet from player's ship"""
+    bullet.fire(player.pos())
+
 
 def game_over():
-    wn.game_over()
-    sys.exit('Game over')
-
-def game_over():
+    """Sorry... you lost! But you can always try again!"""
     # [t.hideturtle() for t in wn.turtles()]
     print('Exit using "q" key')
-    wn.game_over()
-    return False
+    wn.show_game_over()
+    game.game_over()
 
 
 # Create keyboard bindings
@@ -63,17 +71,16 @@ while keep_playing:
     # Move the enemies
     for enemy in enemies:
         enemy.update_position()
+        if enemy.reached_goal() or is_collision(player, enemy):
+            keep_playing = False
+            game_over()
+            break
 
         # Check for a collision between the bullet and the enemy
         if is_collision(bullet, enemy):
-            bullet.reset()        
+            bullet.reset()
             enemy.spawn()
-        
-        if enemy.ycor() < -210:
-            keep_playing = game_over()
-            break
-    
-#    turtle.update()
 
-# Temporary Exit Statement
+
+# Click on windows `close button` to exit
 wn.exitonclick()

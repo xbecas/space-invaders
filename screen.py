@@ -2,6 +2,11 @@
 
 import turtle
 
+from game import GameConfig
+
+
+config = GameConfig()
+
 
 def is_2d_array_of_numbers(array):
     """Argument is array (list or tuple) of numbers (int or float) has
@@ -22,8 +27,8 @@ def is_2d_array_of_numbers(array):
 class GameWindow(turtle._Screen):
     """Define enemy as Python Turtle Object"""
 
-    CANVAS_WIDTH = 600
-    CANVAS_HEIGHT = 600
+    CANVAS_WIDTH = config.CANVAS_WIDTH
+    CANVAS_HEIGHT = config.CANVAS_HEIGHT
 
     def __init__(self, title, bgcolor, size=None):
         super().__init__()
@@ -59,13 +64,14 @@ class GameWindow(turtle._Screen):
     def set_title(self, title):
         """Set window title"""
         self.title = title
-        
-    def game_over(self):
+
+
+    def show_game_over(self):
         ender = turtle.Turtle()
         ender.hideturtle()
         ender.setposition(0, 0)
         ender.pencolor('white')
-        ender.write('Game over', font=('arial',50,'bold'), align='center')
+        ender.write('Game over', font=('arial', 50, 'bold'), align='center')
  
 
 
@@ -93,8 +99,16 @@ def draw_border(size, pen_color='white', pen_width=3):
 
 
 if __name__ == '__main__':
-    SIZE = CANVAS_WIDTH, CANVAS_HEIGHT = (600, 600)
-    wn = GameWindow(title='Space Invaders', bgcolor='black', size=SIZE)
+    CANVAS_WIDTH = config.CANVAS_WIDTH
+    CANVAS_HEIGHT = config.CANVAS_HEIGHT
+    SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
+
+    wn = GameWindow(
+        title=config.TITLE,
+        bgcolor=config.BACKGROUND_COLOR,
+        size=(config.CANVAS_WIDTH, config.CANVAS_HEIGHT)
+        )
     draw_border(SIZE)
-    wn.game_over()
+    wn.show_game_over()
+    
     turtle.mainloop()

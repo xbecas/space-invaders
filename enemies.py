@@ -1,7 +1,11 @@
 """Space Invaders - Enemy Class"""
 
 import turtle
-import random
+
+from game import Game
+
+
+game = Game()
 
 
 class Enemy(turtle.Turtle):
@@ -9,24 +13,22 @@ class Enemy(turtle.Turtle):
     
     def __init__(self):
         super().__init__()
-        self.dx = -5  # 2
+        self.dx = game.get_enemy_speed()
         self.setup()
         self.spawn()
 
 
     def setup(self):
         """Configure enemy as Python Turtle object"""
-        self.color("red")
-        self.shape("circle")
+        self.color('white', 'red')
+        self.shape('circle')
         self.penup()
         self.speed(0)
 
 
     def spawn(self):
         """Set enemy's initial position"""
-        x = random.randint(-200, 200)
-        y = random.randint(100, 250)
-        self.setposition(x, y)
+        self.setposition(game.get_enemy_position())
     
     
     def update_position(self):
@@ -34,21 +36,27 @@ class Enemy(turtle.Turtle):
         new_x = self.xcor() + self.dx
         self.setx(new_x)
           
-        if not (-280 < new_x < 280):
+        if not (game.ENEMY_MOVE_MIN_X < new_x < game.ENEMY_MOVE_MAX_X):
             self.move_down()
 
+    
     def move_down(self):
         """Move the enemy back and down"""
-        new_y = self.ycor() - 40
+        new_y = self.ycor() - game.ENEMY_DY
         self.sety(new_y)
         self.dx *= -1
+
+
+    def reached_goal(self):
+        return self.ycor() < game.ENEMY_Y_GOAL
+
 
 
 class Enemies():
     """Create list of enemies. Each enemy is a turtle object with given
     attributes, namely shape, color, speed and position"""
     
-    def generate_list_of_enemies(number_of_enemies=5):
+    def generate_list_of_enemies(number_of_enemies=game.number_of_enemies()):
         return [Enemy() for i in range(number_of_enemies)]
 
 
